@@ -2,7 +2,7 @@
 //% block="Proximity"
 //% icon="\uf06e"
 namespace proximity {
-    const rssThreshold = 2      // Recieved strength that is "close"
+    const rssThreshold = -90    // Recieved strength that is "close"
     const timeThreshold = 1000  // Time before microbit is considered "far" 
     const period = 250          // 250ms = ~ 4x per second
     const radioGroup = 25       // Arbitrary / try to avoid collisions
@@ -15,7 +15,7 @@ namespace proximity {
     let who: any = {}  
 
     forever(() => {
-        radio.setTransmitSerialNumber(true)
+        //radio.setTransmitSerialNumber(true)
         radio.setTransmitPower(transmitPower)
         radio.setGroup(radioGroup)  
         radio.sendValue(control.deviceName(), magicNumber) 
@@ -33,17 +33,22 @@ namespace proximity {
 
         const storedValue = who[name]
         const lastRecievedTime = storedValue ? storedValue : (now - timeThreshold - 1)
+        serial.writeLine("stored = " + storedValue)
+        serial.writeLine("lRT = " + lastRecievedTime)
 
         // Debugging / testing
-        serial.writeValue("rss", rss)
+        serial.writeValue(name, rss)
 
         // If "close enough" and "new enough detection"
-        if (rss >= rssThreshold && (now - lastRecievedTime) >= timeThreshold) {
-            // Proximity detected:  Trigger event handler
-            if(nearHandler) {
-                nearHandler(name, rss)
-            }
+        if (rss >= rssThreshold) {
             who[name] = now
+
+            if((now - lastRecievedTime) >= timeThreshold) {
+                // Proximity detected:  Trigger event handler
+                if(nearHandler) {
+                    nearHandler(name, rss)
+                }
+            }
         }
     });
 

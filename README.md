@@ -2,165 +2,20 @@
 
 Determine if the micro:bit is close to another micro:bit (utilizes radio and may prevent other radio functions)
 
+## TODOs
 
-# Single Button Clicks
+New blocks / ideas:
+* tare option to set target distance? 
+* Instead of mb name, select a name/tag for microbit (microbit name is default)
+* Diff in send vs. recieve strength?  Maybe send name:send strength at multiple strengths 
+  * Detect could use a table to detect / classify distances based on loss?
+* Block for inRange and leftRange? 
 
-```sig
-buttonClicks.onButtonSingleClicked(button: buttonClicks.AorB, body: Action) : void
-``` 
+C++
+* Get radio parameters (signal strength, channel, and frequencies)
+* Set / restore them before/after prox checks?
 
-Set the actions to do on a single click. 
-
-# Double Button Clicks
-
-```sig
-buttonClicks.onButtonDoubleClicked(button: buttonClicks.AorB, body: Action) : void
-``` 
-
-Set the actions to do on a double click. 
-
-# Holding Buttons (Long Clicks)
-
-```sig
-buttonClicks.onButtonHeld(button: buttonClicks.AorB, body: Action) : void
-``` 
-
-Set the actions to do while the button is held down.
-
-### ~alert
-
-# Holding a button down 
-
-Holding the button will cause this event to happen repeated while the button is held.  
-
-### ~
-
-
-
-# Button Down 
-
-```sig
-buttonClicks.onButtonDown(button: buttonClicks.AorB, body: Action) : void
-``` 
-
-Set the actions to do when the button first makes contact when being pressed. This will run before other events, like single click, double click, and button held.
-
-
-# Button Up
-
-```sig
-buttonClicks.onButtonUp(button: buttonClicks.AorB, body: Action) : void
-``` 
-
-Set the actions to do when the button is released. This will run before before events, like single click, double click, and button held.
-
-# Example 
-
-The following program will show the behavior on both the LED grid and the serial console.  
-
-* The buttons that cause a click event will be shown at the top row of LEDs:
-  * Interaction with button A will be indicated with a single LED in the upper *left*.
-  * Interaction with button B will be indicated with a single LED in the upper *right*. 
-* The second row will show the up/down events briefly (it may be erased when other events happen)
-  * The left LED will toggle on/off when button A is pressed/released
-  * The right LED will toggle on/off when button A is pressed/released
-* The specific event will be indicated on the bottom row:
-  * A single click will be shown with a single LED on the bottom left. 
-  * A double click will be shown with a two LEDs on the bottom (leftmost and middle). 
-  * Holding a button will be shown by lighting all five LEDs.
-
-```block
-
-buttonClicks.onButtonSingleClicked(buttonClicks.AorB.B, function () {
-    serial.writeLine("B single")
-    basic.showLeds(`
-        . . . . #
-        . . . . .
-        . . . . .
-        . . . . .
-        # . . . .
-        `)
-    showClear()
-})
-buttonClicks.onButtonDown(buttonClicks.AorB.B, function () {
-    serial.writeLine("B down")
-    led.toggle(4, 1)
-})
-buttonClicks.onButtonDoubleClicked(buttonClicks.AorB.A, function () {
-    serial.writeLine("A double")
-    basic.showLeds(`
-        # . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        # . # . .
-        `)
-    showClear()
-})
-buttonClicks.onButtonUp(buttonClicks.AorB.B, function () {
-    serial.writeLine("B up")
-    led.toggle(4, 1)
-})
-buttonClicks.onButtonUp(buttonClicks.AorB.A, function () {
-    serial.writeLine("A up")
-    led.toggle(0, 1)
-})
-function showClear () {
-    basic.pause(100)
-    basic.clearScreen()
-}
-buttonClicks.onButtonDown(buttonClicks.AorB.A, function () {
-    serial.writeLine("A down")
-    led.toggle(0, 1)
-})
-buttonClicks.onButtonHeld(buttonClicks.AorB.B, function () {
-    serial.writeLine("B held")
-    basic.showLeds(`
-        . . . . #
-        . . . . .
-        . . . . .
-        . . . . .
-        # # # # #
-        `)
-    showClear()
-})
-buttonClicks.onButtonSingleClicked(buttonClicks.AorB.A, function () {
-    serial.writeLine("A single")
-    basic.showLeds(`
-        # . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        # . . . .
-        `)
-    showClear()
-})
-buttonClicks.onButtonDoubleClicked(buttonClicks.AorB.B, function () {
-    serial.writeLine("B double")
-    basic.showLeds(`
-        . . . . #
-        . . . . .
-        . . . . .
-        . . . . .
-        # . # . .
-        `)
-    showClear()
-})
-buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
-    serial.writeLine("A held")
-    basic.showLeds(`
-        # . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        # # # # #
-        `)
-    showClear()
-})
-basic.showIcon(IconNames.Heart)
-
-```
-
+Docs / testing 
 
 # Acknowledgements 
 
